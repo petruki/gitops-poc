@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build:
+  build-test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -25,3 +25,6 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+      env:
+        GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+        GIT_REPO_URL: https://github.com/petruki/gitops-poc

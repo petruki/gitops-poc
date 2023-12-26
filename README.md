@@ -2,6 +2,7 @@
 
 This project is an experiment to validate various ideas for DevOps tooling.
 - GitOps routines
+- GraphQL consumer
 - Coroutines for scheduling and running tasks
 
 ## Requirements

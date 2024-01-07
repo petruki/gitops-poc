@@ -41,6 +41,28 @@ func (gs *GoGitService) GetBranches(repoURL string, token string) ([]string, err
 	return branchNames, nil
 }
 
+// Get file content from a repository
+func (gs *GoGitService) GetFileContent(repoURL string, token string, filePath string) (string, error) {
+	r, _ := getRepository(repoURL, token)
+
+	// Get the HEAD reference
+	ref, _ := r.Head()
+
+	// Get the commit object from the reference
+	c, _ := r.CommitObject(ref.Hash())
+
+	// Get the tree from the commit object
+	tree, _ := c.Tree()
+
+	// Get the file
+	f, _ := tree.File(filePath)
+
+	// Get the content
+	content, _ := f.Contents()
+
+	return content, nil
+}
+
 func getCommitObject(repoURL string, token string) (*object.Commit, error) {
 	r, _ := getRepository(repoURL, token)
 

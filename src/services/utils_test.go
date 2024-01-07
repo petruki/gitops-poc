@@ -27,3 +27,9 @@ func AssertNil(t *testing.T, object interface{}) {
 		t.Errorf("Object is not nil")
 	}
 }
+
+func AssertEqual(t *testing.T, a interface{}, b interface{}) {
+	if a != b {
+		t.Errorf("Expected %v, got %v", a, b)
+	}
+}

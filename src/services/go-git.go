@@ -4,6 +4,7 @@ import (
 	"time"
 
 	git "github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/go-git/go-git/v5/storage/memory"
@@ -11,18 +12,33 @@ import (
 
 type GoGitService struct{}
 
-func (gs *GoGitService) CheckoutAndCollectLastCommitDate(repoURL string, token string) (time.Time, error) {
+func (gs *GoGitService) GetLastCommitDate(repoURL string, token string) (time.Time, error) {
 	c, _ := getCommitObject(repoURL, token)
 
 	// Return the date of the commit
 	return c.Author.When, nil
 }
 
-func (gs *GoGitService) CheckoutAndCollectLastCommitHash(repoURL string, token string) (string, error) {
+func (gs *GoGitService) GetLastCommitHash(repoURL string, token string) (string, error) {
 	c, _ := getCommitObject(repoURL, token)
 
 	// Return the date of the commit
 	return c.Hash.String(), nil
+}
+
+func (gs *GoGitService) GetBranches(repoURL string, token string) ([]string, error) {
+	r, _ := getRepository(repoURL, token)
+
+	// Get the branchs
+	branches, _ := r.Branches()
+
+	var branchNames []string
+	branches.ForEach(func(b *plumbing.Reference) error {
+		branchNames = append(branchNames, b.Name().Short())
+		return nil
+	})
+
+	return branchNames, nil
 }
 
 func getCommitObject(repoURL string, token string) (*object.Commit, error) {

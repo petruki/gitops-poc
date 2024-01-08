@@ -4,37 +4,39 @@ import (
 	"testing"
 )
 
-func TestCheckoutAndCollectLastCommitDateWithGoGit(t *testing.T) {
-	gs := &GoGitService{}
+func TestCheckoutAndCollectLastCommitDate(t *testing.T) {
+	gs := &GoGitService{
+		repoURL: GetEnv("GIT_REPO_URL"),
+		token:   GetEnv("GIT_TOKEN"),
+	}
 
-	repoURL := GetEnv("GIT_REPO_URL")
-	token := GetEnv("GIT_TOKEN")
-
-	lastCommitDate, err := gs.GetLastCommitDate(repoURL, token)
+	lastCommitDate, err := gs.GetLastCommitDate()
 	AssertNil(t, err)
 	AssertNotNil(t, lastCommitDate.String())
 }
 
-func TestCheckoutAndCollectLastCommitHashWithGoGit(t *testing.T) {
-	gs := &GoGitService{}
+func TestCheckoutAndCollectLastCommitHash(t *testing.T) {
+	gs := &GoGitService{
+		repoURL: GetEnv("GIT_REPO_URL"),
+		token:   GetEnv("GIT_TOKEN"),
+	}
 
-	repoURL := GetEnv("GIT_REPO_URL")
-	token := GetEnv("GIT_TOKEN")
-
-	lastCommitHash, err := gs.GetLastCommitHash(repoURL, token)
+	lastCommitHash, err := gs.GetLastCommitHash()
+	println(lastCommitHash)
 	AssertNil(t, err)
 	AssertNotNil(t, lastCommitHash)
 }
 
-func TestGetBranchesWithGoGit(t *testing.T) {
-	gs := &GoGitService{}
+func TestGetFileContent(t *testing.T) {
+	gs := &GoGitService{
+		repoURL: GetEnv("GIT_REPO_URL"),
+		token:   GetEnv("GIT_TOKEN"),
+	}
 
-	repoURL := GetEnv("GIT_REPO_URL")
-	token := GetEnv("GIT_TOKEN")
+	filePath := "resources/default.json"
 
-	branches, err := gs.GetBranches(repoURL, token)
+	content, err := gs.GetFileContent(filePath)
 	AssertNil(t, err)
-	AssertNotNil(t, branches)
-	AssertEqual(t, len(branches), 1)
-	AssertEqual(t, branches[0], "master")
+	AssertNotNil(t, content)
+	AssertContains(t, content, "Playground")
 }

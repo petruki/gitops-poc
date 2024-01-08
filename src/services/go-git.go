@@ -3,6 +3,7 @@ package services
 import (
 	"time"
 
+	"github.com/go-git/go-billy/v5/memfs"
 	git "github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -10,40 +11,28 @@ import (
 	"github.com/go-git/go-git/v5/storage/memory"
 )
 
-type GoGitService struct{}
+type GoGitService struct {
+	repoURL    string
+	token      string
+	branchName string
+}
 
-func (gs *GoGitService) GetLastCommitDate(repoURL string, token string) (time.Time, error) {
-	c, _ := getCommitObject(repoURL, token)
+func (gs *GoGitService) GetLastCommitDate() (time.Time, error) {
+	c, _ := gs.getCommitObject()
 
 	// Return the date of the commit
 	return c.Author.When, nil
 }
 
-func (gs *GoGitService) GetLastCommitHash(repoURL string, token string) (string, error) {
-	c, _ := getCommitObject(repoURL, token)
+func (gs *GoGitService) GetLastCommitHash() (string, error) {
+	c, _ := gs.getCommitObject()
 
 	// Return the date of the commit
 	return c.Hash.String(), nil
 }
 
-func (gs *GoGitService) GetBranches(repoURL string, token string) ([]string, error) {
-	r, _ := getRepository(repoURL, token)
-
-	// Get the branchs
-	branches, _ := r.Branches()
-
-	var branchNames []string
-	branches.ForEach(func(b *plumbing.Reference) error {
-		branchNames = append(branchNames, b.Name().Short())
-		return nil
-	})
-
-	return branchNames, nil
-}
-
-// Get file content from a repository
-func (gs *GoGitService) GetFileContent(repoURL string, token string, filePath string) (string, error) {
-	r, _ := getRepository(repoURL, token)
+func (gs *GoGitService) GetFileContent(filePath string) (string, error) {
+	r, _ := gs.getRepository()
 
 	// Get the HEAD reference
 	ref, _ := r.Head()
@@ -63,8 +52,8 @@ func (gs *GoGitService) GetFileContent(repoURL string, token string, filePath st
 	return content, nil
 }
 
-func getCommitObject(repoURL string, token string) (*object.Commit, error) {
-	r, _ := getRepository(repoURL, token)
+func (gs *GoGitService) getCommitObject() (*object.Commit, error) {
+	r, _ := gs.getRepository()
 
 	// Get the HEAD reference
 	ref, _ := r.Head()
@@ -73,13 +62,32 @@ func getCommitObject(repoURL string, token string) (*object.Commit, error) {
 	return r.CommitObject(ref.Hash())
 }
 
-func getRepository(repoURL string, token string) (*git.Repository, error) {
-	// Create a new repository object with the given URL
-	return git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
-		URL: repoURL,
+func (gs *GoGitService) getRepository() (*git.Repository, error) {
+	// Clone repository using in-memory storage
+	r, _ := git.Clone(memory.NewStorage(), memfs.New(), &git.CloneOptions{
+		URL: gs.repoURL,
 		Auth: &http.BasicAuth{
 			Username: "git-user",
-			Password: token,
+			Password: gs.token,
 		},
 	})
+
+	// Checkout branch
+	return gs.checkoutBranch(*r)
+}
+
+func (gs *GoGitService) checkoutBranch(r git.Repository) (*git.Repository, error) {
+	// Fetch worktree
+	w, err := r.Worktree()
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Checkout remote branch
+	err = w.Checkout(&git.CheckoutOptions{
+		Branch: plumbing.NewRemoteReferenceName("origin", gs.branchName),
+	})
+
+	return &r, err
 }

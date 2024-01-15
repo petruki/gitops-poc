@@ -1,34 +1,31 @@
 package model
 
 type Domain struct {
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Activated   bool    `json:"activated"`
-	Group       []Group `json:"group"`
+	Group []Group `json:"group,omitempty"`
 }
 
 type Group struct {
-	Name        string   `json:"name"`
-	Description string   `json:"description"`
-	Activated   bool     `json:"activated"`
-	Config      []Config `json:"config"`
+	Name        string   `json:"name,omitempty"`
+	Description string   `json:"description,omitempty"`
+	Activated   *bool    `json:"activated,omitempty"`
+	Config      []Config `json:"config,omitempty"`
 }
 
 type Config struct {
-	Key         string     `json:"key"`
-	Description string     `json:"description"`
-	Activated   bool       `json:"activated"`
-	Strategies  []Strategy `json:"strategies"`
-	Components  []string   `json:"components"`
+	Key         string     `json:"key,omitempty"`
+	Description string     `json:"description,omitempty"`
+	Activated   *bool      `json:"activated,omitempty"`
+	Strategies  []Strategy `json:"strategies,omitempty"`
+	Components  []string   `json:"components,omitempty"`
 }
 
 type Strategy struct {
-	Strategy  string   `json:"strategy"`
-	Activated bool     `json:"activated"`
-	Operation string   `json:"operation"`
-	Values    []string `json:"values"`
+	Strategy  string   `json:"strategy,omitempty"`
+	Activated *bool    `json:"activated,omitempty"`
+	Operation string   `json:"operation,omitempty"`
+	Values    []string `json:"values,omitempty"`
 }
 
 type Snapshot struct {
-	Domain Domain `json:"domain"`
+	Domain Domain `json:"domain,omitempty"`
 }

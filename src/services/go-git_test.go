@@ -38,5 +38,5 @@ func TestGetFileContent(t *testing.T) {
 	content, err := gs.GetFileContent(filePath)
 	AssertNil(t, err)
 	AssertNotNil(t, content)
-	AssertContains(t, content, "Playground")
+	AssertContains(t, content, "Release 1")
 }

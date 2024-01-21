@@ -25,11 +25,21 @@ func TestCheckSnapshotDiff(t *testing.T) {
 	snapshotLeft := NewSnapshotFromJson([]byte(jsonLeft))
 	snapshotRight := NewSnapshotFromJson([]byte(jsonRight))
 
-	diff := CheckSnapshotDiff(snapshotLeft, snapshotRight)
+	// Check changes
+	diff := CheckSnapshotDiff(snapshotLeft, snapshotRight, CHANGED)
 	AssertNotNil(t, diff)
-	// println(NewJsonStringFromSnapshot(diff))
+	println("CHANGED")
+	println(NewJsonStringFromSnapshot(diff))
 
-	diff2 := CheckSnapshotDiff(snapshotRight, snapshotLeft)
+	// Check new
+	diff2 := CheckSnapshotDiff(snapshotRight, snapshotLeft, NEW)
 	AssertNotNil(t, diff2)
-	// println(NewJsonStringFromSnapshot(diff2))
+	println("NEW")
+	println(NewJsonStringFromSnapshot(diff2))
+
+	// Check deleted
+	diff3 := CheckSnapshotDiff(snapshotLeft, snapshotRight, DELETED)
+	AssertNotNil(t, diff3)
+	println("DELETED")
+	println(NewJsonStringFromSnapshot(diff3))
 }

@@ -29,3 +29,54 @@ type Strategy struct {
 type Snapshot struct {
 	Domain Domain `json:"domain,omitempty"`
 }
+
+func GroupNames(groups []Group) []string {
+	names := make([]string, len(groups))
+	for i, group := range groups {
+		names[i] = group.Name
+	}
+	return names
+}
+
+func ConfigKeys(configs []Config) []string {
+	keys := make([]string, len(configs))
+	for i, config := range configs {
+		keys[i] = config.Key
+	}
+	return keys
+}
+
+func StrategyNames(strategies []Strategy) []string {
+	names := make([]string, len(strategies))
+	for i, strategy := range strategies {
+		names[i] = strategy.Strategy
+	}
+	return names
+}
+
+func GetStrategyByName(strategies []Strategy, name string) Strategy {
+	for _, s := range strategies {
+		if s.Strategy == name {
+			return s
+		}
+	}
+	return Strategy{}
+}
+
+func GetConfigByKey(configs []Config, key string) Config {
+	for _, c := range configs {
+		if c.Key == key {
+			return c
+		}
+	}
+	return Config{}
+}
+
+func GetGroupByName(groups []Group, name string) Group {
+	for _, g := range groups {
+		if g.Name == name {
+			return g
+		}
+	}
+	return Group{}
+}

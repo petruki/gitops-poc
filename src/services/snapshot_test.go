@@ -43,3 +43,27 @@ func TestCheckSnapshotDiff(t *testing.T) {
 	println("DELETED")
 	println(NewJsonStringFromSnapshot(diff3))
 }
+
+func TestCheckSnapshotDiffV2(t *testing.T) {
+	jsonLeft := ReadJsonFromFile(DEFAULT_JSON)
+	jsonRight := ReadJsonFromFile("../../resources/merge1.json")
+	snapshotLeft := NewSnapshotFromJson([]byte(jsonLeft))
+	snapshotRight := NewSnapshotFromJson([]byte(jsonRight))
+
+	// Check changes
+	diff := CheckSnapshotDiffV2(snapshotLeft, snapshotRight, CHANGEDV2)
+	AssertNotNil(t, diff)
+	println("CHANGED")
+	println(NewJsonStringFromSnapshotV2(diff))
+
+	// Check new
+	diff2 := CheckSnapshotDiffV2(snapshotRight, snapshotLeft, NEWV2)
+	AssertNotNil(t, diff2)
+	println("NEW")
+	println(NewJsonStringFromSnapshotV2(diff2))
+
+	diff3 := CheckSnapshotDiffV2(snapshotLeft, snapshotRight, DELETEDV2)
+	AssertNotNil(t, diff3)
+	println("DELETED")
+	println(NewJsonStringFromSnapshotV2(diff3))
+}

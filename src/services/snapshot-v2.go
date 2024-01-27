@@ -32,6 +32,14 @@ func CheckSnapshotDiffV2(left model.Snapshot, right model.Snapshot, diffType Dif
 	return checkGroupDiffV2(left, right, diffType, diffResult)
 }
 
+func MergeResults(diffResults []model.DiffResult) model.DiffResult {
+	var result model.DiffResult
+	for _, diffResult := range diffResults {
+		result.Changes = append(result.Changes, diffResult.Changes...)
+	}
+	return result
+}
+
 func checkGroupDiffV2(left model.Snapshot, right model.Snapshot, diffType DiffTypeV2, diffResult model.DiffResult) model.DiffResult {
 	for _, leftGroup := range left.Domain.Group {
 		if !slices.Contains(model.GroupNames(right.Domain.Group), leftGroup.Name) {

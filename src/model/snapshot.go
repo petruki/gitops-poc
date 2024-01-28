@@ -5,29 +5,37 @@ type Domain struct {
 }
 
 type Group struct {
-	Name        string   `json:"name,omitempty"`
-	Description string   `json:"description,omitempty"`
-	Activated   *bool    `json:"activated,omitempty"`
-	Config      []Config `json:"config,omitempty"`
+	Name        string        `json:"name,omitempty"`
+	Description string        `json:"description,omitempty"`
+	Activated   *bool         `json:"activated,omitempty"`
+	Config      []Config      `json:"config,omitempty"`
+	StatusByEnv []StatusByEnv `json:"statusByEnv,omitempty"`
 }
 
 type Config struct {
-	Key         string     `json:"key,omitempty"`
-	Description string     `json:"description,omitempty"`
-	Activated   *bool      `json:"activated,omitempty"`
-	Strategies  []Strategy `json:"strategies,omitempty"`
-	Components  []string   `json:"components,omitempty"`
+	Key         string        `json:"key,omitempty"`
+	Description string        `json:"description,omitempty"`
+	Activated   *bool         `json:"activated,omitempty"`
+	Strategies  []Strategy    `json:"strategies,omitempty"`
+	Components  []string      `json:"components,omitempty"`
+	StatusByEnv []StatusByEnv `json:"statusByEnv,omitempty"`
 }
 
 type Strategy struct {
-	Strategy  string   `json:"strategy,omitempty"`
-	Activated *bool    `json:"activated,omitempty"`
-	Operation string   `json:"operation,omitempty"`
-	Values    []string `json:"values,omitempty"`
+	Strategy    string        `json:"strategy,omitempty"`
+	Activated   *bool         `json:"activated,omitempty"`
+	Operation   string        `json:"operation,omitempty"`
+	Values      []string      `json:"values,omitempty"`
+	StatusByEnv []StatusByEnv `json:"statusByEnv,omitempty"`
 }
 
 type Snapshot struct {
 	Domain Domain `json:"domain,omitempty"`
+}
+
+type StatusByEnv struct {
+	Env   string `json:"env,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 func GroupNames(groups []Group) []string {

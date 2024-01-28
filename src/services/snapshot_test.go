@@ -30,17 +30,17 @@ func TestCheckSnapshotDiff(t *testing.T) {
 	// Check changes
 	diff := CheckSnapshotDiff(snapshotLeft, snapshotRight, CHANGED)
 	AssertNotNil(t, diff)
-	println(NewJsonStringFromSnapshot(diff))
+	// println(NewJsonStringFromSnapshot(diff))
 
 	// Check new
 	diff2 := CheckSnapshotDiff(snapshotRight, snapshotLeft, NEW)
 	AssertNotNil(t, diff2)
-	println(NewJsonStringFromSnapshot(diff2))
+	// println(NewJsonStringFromSnapshot(diff2))
 
 	// Check deleted
 	diff3 := CheckSnapshotDiff(snapshotLeft, snapshotRight, DELETED)
 	AssertNotNil(t, diff3)
-	println(NewJsonStringFromSnapshot(diff3))
+	// println(NewJsonStringFromSnapshot(diff3))
 }
 
 func TestCheckSnapshotDiffV2(t *testing.T) {
@@ -63,5 +63,6 @@ func TestCheckSnapshotDiffV2(t *testing.T) {
 
 	// Merge
 	merged := MergeResults([]model.DiffResult{diff, diff2, diff3})
-	println(NewJsonStringFromSnapshotV2(merged))
+	AssertNotNil(t, merged)
+	// println(NewJsonStringFromSnapshotV2(merged))
 }

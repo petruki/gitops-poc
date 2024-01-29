@@ -36,9 +36,9 @@ func GenerateBearerToken(apiKey string, subject string) (string, error) {
 	return signedToken, nil
 }
 
-func FetchPaylaodFromGraphQLEndpoint(url string, token string, domainId string) (string, error) {
+func FetchPayloadFromGraphQLEndpoint(url string, token string, domainId string, environment string) (string, error) {
 	// Define the GraphQL query
-	query := createQuery(domainId)
+	query := createQuery(domainId, environment)
 
 	// Create a new request
 	reqBody, _ := json.Marshal(GraphQLRequest{Query: query})
@@ -64,35 +64,23 @@ func FetchPaylaodFromGraphQLEndpoint(url string, token string, domainId string) 
 	return string(body), nil
 }
 
-func createQuery(id string) string {
+func createQuery(domainId string, environment string) string {
 	return fmt.Sprintf(`
     {
-        domain(_id: "%s") {
+        domain(_id: "%s", environment: "%s") {
             name
             version
             group {
                 name
                 description
                 activated
-                statusByEnv {
-                    env
-                    value
-                }
                 config {
                     key
                     description
                     activated
-                    statusByEnv {
-                        env
-                        value
-                    }
                     strategies {
                         strategy
                         activated
-                        statusByEnv {
-                            env
-                            value
-                        }
                         operation
                         values
                     }
@@ -100,5 +88,5 @@ func createQuery(id string) string {
                 }
             }
         }
-    }`, id)
+    }`, domainId, environment)
 }

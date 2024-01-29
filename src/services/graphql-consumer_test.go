@@ -14,7 +14,7 @@ func TestFetchPaylaodFromGraphQLEndpoint(t *testing.T) {
 	domainId := GetEnv("SWITCHER_API_DOMAIN_ID")
 	token, _ := GenerateBearerToken(GetEnv("SWITCHER_API_JWT_SECRET"), domainId)
 
-	payload, _ := FetchPaylaodFromGraphQLEndpoint(GetEnv("SWITCHER_API_URL"), token, domainId)
+	payload, _ := FetchPayloadFromGraphQLEndpoint(GetEnv("SWITCHER_API_URL"), token, domainId, "default")
 	AssertNotNil(t, payload)
 	// println(FormatJSON(payload))
 }
